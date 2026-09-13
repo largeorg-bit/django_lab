@@ -1,19 +1,36 @@
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlparse
 
 
 HOST = "127.0.0.1"
 PORT = 8000
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PAGES = {
+    "/": "index.html",
+    "/index": "index.html",
+    "/index.html": "index.html",
+    "/catalog": "catalog.html",
+    "/catalog.html": "catalog.html",
+    "/category": "category.html",
+    "/category.html": "category.html",
+    "/contacts": "contacts.html",
+    "/contacts.html": "contacts.html",
+    "/orders": "orders.html",
+    "/orders.html": "orders.html",
+}
 
 
 class HttpHandler(BaseHTTPRequestHandler):
     """Обрабатывает GET и POST без фреймворков."""
 
     def do_GET(self):
-        """На любой GET-запрос возвращает HTML-страницу «Контакты»."""
-        self.send_html_page("contacts.html")
+        """Отдаёт запрошенную HTML-страницу."""
+        filename = self.get_page_filename()
+        if filename is None:
+            self.send_html_page("404.html", status=404)
+            return
+        self.send_html_page(filename)
 
     def do_POST(self):
         """Принимает данные формы и печатает их в консоль."""
@@ -33,7 +50,13 @@ class HttpHandler(BaseHTTPRequestHandler):
         else:
             print("Поля формы отсутствуют", flush=True)
 
-        self.send_html_page("contacts.html")
+        filename = self.get_page_filename() or "contacts.html"
+        self.send_html_page(filename)
+
+    def get_page_filename(self):
+        """Возвращает имя HTML-файла по пути запроса."""
+        path = urlparse(self.path).path
+        return PAGES.get(path)
 
     def send_html_page(self, filename, status=200):
         """Читает HTML-файл и отправляет его клиенту."""
