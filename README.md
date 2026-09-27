@@ -87,7 +87,6 @@ django_lab/
 │   ├── models.py
 │   └── views.py
 ├── config/
-├── screenshots/
 ├── .env.example
 ├── manage.py
 ├── requirements.txt
