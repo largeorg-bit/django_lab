@@ -1,25 +1,39 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+
+from catalog.forms import ContactForm
+from catalog.models import Product
 
 
 def home(request):
-    """Отображает главную страницу каталога."""
-    return render(request, "catalog/home.html")
+    """Отображает список товаров на главной странице."""
+    products = Product.objects.all()
+    return render(request, "catalog/home.html", {"products": products})
+
+
+def product_detail(request, pk):
+    """Отображает подробную информацию о товаре."""
+    product = get_object_or_404(Product, pk=pk)
+    return render(
+        request,
+        "catalog/product_detail.html",
+        {"product": product},
+    )
 
 
 def contacts(request):
-    """Отображает страницу контактов и принимает форму."""
-    context = {"success": False}
-
+    """Принимает форму обратной связи и сохраняет её в БД."""
+    success = False
     if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message = request.POST.get("message")
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            success = True
+            form = ContactForm()
+    else:
+        form = ContactForm()
 
-        print("Получены данные формы:", flush=True)
-        print(f"Имя: {name}", flush=True)
-        print(f"Телефон: {phone}", flush=True)
-        print(f"Сообщение: {message}", flush=True)
-
-        context["success"] = True
-
-    return render(request, "catalog/contacts.html", context)
+    return render(
+        request,
+        "catalog/contacts.html",
+        {"form": form, "success": success},
+    )
