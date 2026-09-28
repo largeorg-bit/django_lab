@@ -1,0 +1,33 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}{{ product.name }} — Skystore{% endblock %}
+
+{% block header %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">{{ product.name }}</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row align-items-start">
+        <div class="col-md-6 mb-4">
+            {% if product.image %}
+                <img
+                    src="{{ product.image.url }}"
+                    class="img-fluid product-detail-image"
+                    alt="{{ product.name }}"
+                >
+            {% else %}
+                <div class="product-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                    Нет изображения
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <p class="lead">{{ product.description }}</p>
+            <p class="fs-3 fw-semibold">$ {{ product.price }}</p>
+            <p class="text-secondary">Категория: {{ product.category }}</p>
+            <a class="btn btn-outline-primary" href="{% url 'home' %}">Назад в каталог</a>
+        </div>
+    </div>
+{% endblock %}
