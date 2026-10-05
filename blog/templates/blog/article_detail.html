@@ -1,0 +1,36 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}{{ article.title }} — Skystore{% endblock %}
+
+{% block header %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">{{ article.title }}</h1>
+        <p class="text-secondary">Просмотры: {{ article.views_count }}</p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            {% if article.preview %}
+                <img
+                    src="{{ article.preview.url }}"
+                    class="img-fluid mb-4"
+                    alt="{{ article.title }}"
+                >
+            {% endif %}
+            <p class="lead">{{ article.content|linebreaks }}</p>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'article_list' %}">
+                    К списку статей
+                </a>
+                <a
+                    class="btn btn-outline-secondary"
+                    href="{% url 'article_update' article.pk %}"
+                >
+                    Редактировать
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
