@@ -7,8 +7,9 @@
 - главная страница со списком товаров из базы
 - страница товара с названием, описанием, ценой и изображением
 - форма обратной связи с сохранением сообщений в БД
-- модели `Category` и `Product`
-- админ-панель для категорий и продуктов
+- раздел статей: список опубликованных, просмотр со счётчиком, редактирование
+- модели `Category`, `Product` и `Article`
+- админ-панель для категорий, продуктов и статей
 - загрузка тестовых данных из фикстур
 
 ## Технологии
@@ -62,6 +63,7 @@ python manage.py runserver
 ```bash
 python manage.py loaddata categories.json
 python manage.py loaddata products.json
+python manage.py loaddata articles.json
 python manage.py fill_catalog
 python manage.py shell
 ```
@@ -74,6 +76,9 @@ python manage.py shell
 | --- | --- |
 | `/` | Главная страница каталога |
 | `/products/<id>/` | Подробная информация о товаре |
+| `/articles/` | Список опубликованных статей |
+| `/articles/<id>/` | Просмотр статьи |
+| `/articles/<id>/edit/` | Редактирование статьи |
 | `/contacts/` | Контакты и форма обратной связи |
 | `/admin/` | Админ-панель Django |
 
@@ -87,6 +92,12 @@ django_lab/
 │   ├── migrations/
 │   ├── templates/
 │   ├── admin.py
+│   ├── forms.py
+│   ├── models.py
+│   └── views.py
+├── blog/
+│   ├── fixtures/
+│   ├── templates/
 │   ├── forms.py
 │   ├── models.py
 │   └── views.py
