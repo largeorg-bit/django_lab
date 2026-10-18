@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, UpdateView
 
-from catalog.forms import ContactForm
+from catalog.forms import ContactForm, ProductForm
 from catalog.models import Product
 
 
@@ -37,3 +39,41 @@ def contacts(request):
         "catalog/contacts.html",
         {"form": form, "success": success},
     )
+
+
+class ProductCreateView(CreateView):
+    """Создание нового продукта."""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Добавление продукта"
+        return context
+
+
+class ProductUpdateView(UpdateView):
+    """Редактирование продукта."""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("product_detail", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Редактирование продукта"
+        return context
+
+
+class ProductDeleteView(DeleteView):
+    """Удаление продукта."""
+
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("home")

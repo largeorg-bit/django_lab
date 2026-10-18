@@ -27,7 +27,25 @@
             <p class="lead">{{ product.description }}</p>
             <p class="fs-3 fw-semibold">$ {{ product.price }}</p>
             <p class="text-secondary">Категория: {{ product.category }}</p>
-            <a class="btn btn-outline-primary" href="{% url 'home' %}">Назад в каталог</a>
+            <p class="text-secondary">
+                {% if product.is_available %}В наличии{% else %}Нет в наличии{% endif %}
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-primary" href="{% url 'home' %}">Назад в каталог</a>
+                <a
+                    class="btn btn-outline-secondary"
+                    href="{% url 'product_update' product.pk %}"
+                >
+                    Редактировать
+                </a>
+                <a
+                    class="btn btn-outline-danger"
+                    href="{% url 'product_delete' product.pk %}"
+                >
+                    Удалить
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}
+

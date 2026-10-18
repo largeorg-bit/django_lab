@@ -6,3 +6,9 @@ env/
 db.sqlite3
 .env
 media/
+.DS_Store
+*.pyc
+*.pyo
+.Python
+*.log
+

@@ -13,6 +13,9 @@
 {% endblock %}
 
 {% block content %}
+    <div class="mb-4 text-end">
+        <a class="btn btn-primary" href="{% url 'product_create' %}">Добавить продукт</a>
+    </div>
     <div class="row text-center">
         {% for product in products %}
             <div class="col-md-4">
@@ -50,3 +53,4 @@
         {% endfor %}
     </div>
 {% endblock %}
+
