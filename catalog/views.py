@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
@@ -12,6 +14,7 @@ def home(request):
     return render(request, "catalog/home.html", {"products": products})
 
 
+@login_required
 def product_detail(request, pk):
     """Отображает подробную информацию о товаре."""
     product = get_object_or_404(Product, pk=pk)
@@ -41,7 +44,7 @@ def contacts(request):
     )
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """Создание нового продукта."""
 
     model = Product
@@ -55,7 +58,7 @@ class ProductCreateView(CreateView):
         return context
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Редактирование продукта."""
 
     model = Product
@@ -71,7 +74,7 @@ class ProductUpdateView(UpdateView):
         return context
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """Удаление продукта."""
 
     model = Product
