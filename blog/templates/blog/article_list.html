@@ -1,0 +1,42 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Статьи — Skystore{% endblock %}
+
+{% block header %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Статьи</h1>
+        <p class="lead">Полезные материалы о продуктах и разработке</p>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% for article in articles %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 box-shadow">
+                    {% if article.preview %}
+                        <img
+                            src="{{ article.preview.url }}"
+                            class="card-img-top product-card-image"
+                            alt="{{ article.title }}"
+                        >
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h2 class="h4">{{ article.title }}</h2>
+                        <p class="card-text">
+                            {{ article.content|truncatechars:100 }}
+                        </p>
+                        <a
+                            class="btn btn-outline-primary mt-auto"
+                            href="{% url 'article_detail' article.pk %}"
+                        >
+                            Читать
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-secondary">Опубликованных статей пока нет.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
