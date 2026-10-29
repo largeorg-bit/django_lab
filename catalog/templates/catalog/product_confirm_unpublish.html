@@ -1,0 +1,29 @@
+{% extends "catalog/base.html" %}
+
+{% block title %}Снятие с публикации — Skystore{% endblock %}
+
+{% block header %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Снятие с публикации</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="alert alert-warning">
+                Отменить публикацию продукта «{{ product.name }}»?
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Снять с публикации</button>
+                <a
+                    class="btn btn-outline-secondary"
+                    href="{% url 'product_detail' product.pk %}"
+                >
+                    Отмена
+                </a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

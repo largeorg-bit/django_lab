@@ -1,0 +1,93 @@
+from django.conf import settings
+from django.db import models
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Наименование")
+    description = models.TextField(verbose_name="Описание", blank=True)
+
+    class Meta:
+        verbose_name = "категория"
+        verbose_name_plural = "категории"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Наименование")
+    description = models.TextField(verbose_name="Описание", blank=True)
+    image = models.ImageField(
+        upload_to="products/",
+        verbose_name="Изображение",
+        blank=True,
+        null=True,
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name="Категория",
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Цена за покупку",
+    )
+    is_available = models.BooleanField(
+        default=True,
+        verbose_name="В наличии",
+    )
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name="Опубликован",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+        verbose_name="Владелец",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания",
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Дата последнего изменения",
+    )
+
+    class Meta:
+        verbose_name = "продукт"
+        verbose_name_plural = "продукты"
+        ordering = ["name"]
+        permissions = [
+            (
+                "can_unpublish_product",
+                "Может отменять публикацию продукта",
+            ),
+        ]
+
+    def __str__(self):
+        return self.name
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Имя")
+    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    message = models.TextField(verbose_name="Сообщение")
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания",
+    )
+
+    class Meta:
+        verbose_name = "сообщение"
+        verbose_name_plural = "сообщения"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name}: {self.phone}"

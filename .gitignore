@@ -3,3 +3,12 @@ venv/
 __pycache__/
 env/
 *.sqlite*
+db.sqlite3
+.env
+media/
+.DS_Store
+*.pyc
+*.pyo
+.Python
+*.log
+
