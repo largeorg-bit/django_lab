@@ -7,6 +7,7 @@
 - главная страница со списком товаров из базы
 - регистрация и вход пользователей по email
 - CRUD продуктов для авторизованных пользователей
+- владелец продукта и модерация публикации
 - валидация запрещённых слов и отрицательной цены в форме продукта
 - форма обратной связи с сохранением сообщений в БД
 - раздел статей: список опубликованных, просмотр со счётчиком, редактирование
@@ -51,6 +52,7 @@ pip install -r requirements.txt
 
 ```bash
 python manage.py migrate
+python manage.py create_moderators
 python manage.py fill_catalog
 python manage.py runserver
 ```
@@ -65,9 +67,12 @@ python manage.py runserver
 python manage.py loaddata categories.json
 python manage.py loaddata products.json
 python manage.py loaddata articles.json
+python manage.py create_moderators
 python manage.py fill_catalog
 python manage.py shell
 ```
+
+`create_moderators` создаёт группу «Модератор продуктов» с правами `can_unpublish_product` и `delete_product`.
 
 `fill_catalog` удаляет текущие категории и продукты, затем загружает данные из фикстур.
 
@@ -81,8 +86,9 @@ python manage.py shell
 | `/users/logout/` | Выход |
 | `/products/create/` | Создание продукта (только для авторизованных) |
 | `/products/<id>/` | Карточка товара (только для авторизованных) |
-| `/products/<id>/edit/` | Редактирование продукта |
-| `/products/<id>/delete/` | Удаление продукта |
+| `/products/<id>/edit/` | Редактирование (владелец или модератор) |
+| `/products/<id>/delete/` | Удаление (владелец или модератор) |
+| `/products/<id>/unpublish/` | Снятие с публикации (модератор) |
 | `/articles/` | Список опубликованных статей |
 | `/contacts/` | Контакты и форма обратной связи |
 | `/admin/` | Админ-панель Django |

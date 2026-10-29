@@ -7,6 +7,7 @@ from .views import (
     contacts,
     home,
     product_detail,
+    product_unpublish,
 )
 
 urlpatterns = [
@@ -23,5 +24,10 @@ urlpatterns = [
         "products/<int:pk>/delete/",
         ProductDeleteView.as_view(),
         name="product_delete",
+    ),
+    path(
+        "products/<int:pk>/unpublish/",
+        product_unpublish,
+        name="product_unpublish",
     ),
 ]

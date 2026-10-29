@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     <div class="row align-items-start">
         <div class="col-md-6 mb-4">
             {% if product.image %}
@@ -30,22 +35,39 @@
             <p class="text-secondary">
                 {% if product.is_available %}В наличии{% else %}Нет в наличии{% endif %}
             </p>
+            <p class="text-secondary">
+                {% if product.is_published %}Опубликован{% else %}Не опубликован{% endif %}
+            </p>
+            {% if product.owner %}
+                <p class="text-secondary">Владелец: {{ product.owner.email }}</p>
+            {% endif %}
             <div class="d-flex flex-wrap gap-2">
                 <a class="btn btn-outline-primary" href="{% url 'home' %}">Назад в каталог</a>
-                <a
-                    class="btn btn-outline-secondary"
-                    href="{% url 'product_update' product.pk %}"
-                >
-                    Редактировать
-                </a>
-                <a
-                    class="btn btn-outline-danger"
-                    href="{% url 'product_delete' product.pk %}"
-                >
-                    Удалить
-                </a>
+                {% if can_edit %}
+                    <a
+                        class="btn btn-outline-secondary"
+                        href="{% url 'product_update' product.pk %}"
+                    >
+                        Редактировать
+                    </a>
+                {% endif %}
+                {% if can_delete %}
+                    <a
+                        class="btn btn-outline-danger"
+                        href="{% url 'product_delete' product.pk %}"
+                    >
+                        Удалить
+                    </a>
+                {% endif %}
+                {% if can_unpublish %}
+                    <a
+                        class="btn btn-outline-warning"
+                        href="{% url 'product_unpublish' product.pk %}"
+                    >
+                        Снять с публикации
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
 {% endblock %}
-
