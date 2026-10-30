@@ -1,4 +1,27 @@
+from django.conf import settings
+from django.core.cache import cache
+
+from catalog.models import Product
+
 MODERATOR_GROUP_NAME = "Модератор продуктов"
+
+
+def get_products_by_category(category_id):
+    """Возвращает продукты категории с низкоуровневым кешированием в Redis."""
+    cache_key = f"category_{category_id}"
+    products = cache.get(cache_key)
+
+    if products is not None:
+        return products
+
+    products = list(
+        Product.objects.filter(
+            category_id=category_id,
+            is_published=True,
+        ).select_related("category", "owner")
+    )
+    cache.set(cache_key, products, settings.CACHE_TTL)
+    return products
 
 
 def user_is_moderator(user):

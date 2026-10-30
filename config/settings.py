@@ -153,3 +153,29 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@skystore.local")
 
+# Cache / Redis
+CACHE_ENABLED = os.getenv("CACHE_ENABLED", "True") == "True"
+CACHE_TTL = int(os.getenv("CACHE_TTL", "60"))
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                # Redis 3.x на Windows не поддерживает HELLO/RESP3
+                "CONNECTION_POOL_KWARGS": {"protocol": 2},
+            },
+            "TIMEOUT": CACHE_TTL,
+            "KEY_PREFIX": "skystore",
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
+
+

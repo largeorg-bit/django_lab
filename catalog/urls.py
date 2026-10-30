@@ -4,6 +4,7 @@ from .views import (
     ProductCreateView,
     ProductDeleteView,
     ProductUpdateView,
+    category_products,
     contacts,
     home,
     product_detail,
@@ -13,6 +14,11 @@ from .views import (
 urlpatterns = [
     path("", home, name="home"),
     path("contacts/", contacts, name="contacts"),
+    path(
+        "categories/<int:pk>/",
+        category_products,
+        name="category_products",
+    ),
     path("products/create/", ProductCreateView.as_view(), name="product_create"),
     path("products/<int:pk>/", product_detail, name="product_detail"),
     path(

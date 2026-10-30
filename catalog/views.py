@@ -1,14 +1,18 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from django.views.generic import CreateView, DeleteView, UpdateView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product
+from catalog.models import Category, Product
 from catalog.services import (
+    get_products_by_category,
     user_can_delete_product,
     user_can_edit_product,
     user_can_unpublish_product,
@@ -25,9 +29,11 @@ def home(request):
     return render(request, "catalog/home.html", {"products": products})
 
 
+@cache_page(settings.CACHE_TTL)
+@vary_on_cookie
 @login_required
 def product_detail(request, pk):
-    """Отображает подробную информацию о товаре."""
+    """Отображает подробную информацию о товаре (страница кешируется)."""
     product = get_object_or_404(Product, pk=pk)
     context = {
         "product": product,
@@ -38,6 +44,17 @@ def product_detail(request, pk):
         ),
     }
     return render(request, "catalog/product_detail.html", context)
+
+
+def category_products(request, pk):
+    """Отображает продукты выбранной категории через сервис с кешем."""
+    category = get_object_or_404(Category, pk=pk)
+    products = get_products_by_category(category.pk)
+    return render(
+        request,
+        "catalog/category_products.html",
+        {"category": category, "products": products},
+    )
 
 
 @login_required
